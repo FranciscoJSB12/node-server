@@ -12,3 +12,7 @@ psql -h localhost -d my_tasks -U fran
 \d+
 \q
 exit
+
+# Pgadmin
+docker ps
+docker inspect id

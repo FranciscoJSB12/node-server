@@ -2,10 +2,19 @@ const { models} = require("../libs/sequelize");
 
 class TasksService {
     async getAllTasks () {
-        const data = await models.Task.findAll({
+        const tasks = await models.Task.findAll({
             order: [["id", "ASC"]],
         });
-        return data;
+        return tasks;
+    }
+
+    async getOneTask (id) {
+      const parsedId = Number(id);
+      const task = await models.Task.findByPk(parsedId);
+      if (!task) {
+        throw new Error("Task not found");
+      }
+      return task;
     }
 
     async saveTask (task) {

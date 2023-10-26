@@ -1,14 +1,17 @@
 const { models} = require("../libs/sequelize");
 
 class TasksService {
-    async getAllTasks () {
+    async find () {
         const tasks = await models.Task.findAll({
             order: [["id", "ASC"]],
         });
+        if (!task) {
+            throw new Error("No tasks have been found");
+        }
         return tasks;
     }
 
-    async getOneTask (id) {
+    async findOne (id) {
       const parsedId = Number(id);
       const task = await models.Task.findByPk(parsedId);
       if (!task) {
@@ -17,19 +20,25 @@ class TasksService {
       return task;
     }
 
-    async saveTask (task) {
+    async create (task) {
         const newTask = await models.Task.create(task);
         return newTask;
     }
 
-    async deleteTask (id) {
+    async update ({ id, text, done }) {
         const task = await models.Task.findByPk(id);
-        await task.destroy();
+        if (!task) {
+            throw new Error("Task not found");
+        }
+        await task.update({ text, done });
     }
 
-    async changeTask({ id, text, done }) {
+    async delete (id) {
         const task = await models.Task.findByPk(id);
-        await task.update({ text, done });
+        if (!task) {
+            throw new Error("Task not found");
+        }
+        await task.destroy();
     }
 }
 

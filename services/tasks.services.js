@@ -1,3 +1,4 @@
+const boom = require("@hapi/boom");
 const { models} = require("../libs/sequelize");
 
 class TasksService {
@@ -5,8 +6,8 @@ class TasksService {
         const tasks = await models.Task.findAll({
             order: [["id", "ASC"]],
         });
-        if (!task) {
-            throw new Error("No tasks have been found");
+        if (!tasks) {
+            throw boom.notFound("No tasks found");
         }
         return tasks;
     }
@@ -15,20 +16,22 @@ class TasksService {
       const parsedId = Number(id);
       const task = await models.Task.findByPk(parsedId);
       if (!task) {
-        throw new Error("Task not found");
+        throw boom.notFound(`Task id: ${id} not found`);
       }
       return task;
     }
 
     async create (task) {
         const newTask = await models.Task.create(task);
-        return newTask;
+        if (!newTask) {
+            throw boom.notImplemented("Unable to create task");
+        }
     }
 
     async update ({ id, text, done }) {
         const task = await models.Task.findByPk(id);
         if (!task) {
-            throw new Error("Task not found");
+            throw boom.notFound(`Task id: ${id} not found`);
         }
         await task.update({ text, done });
     }
@@ -36,7 +39,7 @@ class TasksService {
     async delete (id) {
         const task = await models.Task.findByPk(id);
         if (!task) {
-            throw new Error("Task not found");
+            throw boom.notFound(`Task id: ${id} not found`);
         }
         await task.destroy();
     }

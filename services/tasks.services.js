@@ -28,12 +28,12 @@ class TasksService {
         }
     }
 
-    async update ({ id, text, done }) {
+    async update (id, newData) {
         const task = await models.Task.findByPk(id);
         if (!task) {
-            throw boom.notFound(`Task id: ${id} not found`);
+            throw boom.notFound(`Task id-${id} not found`);
         }
-        await task.update({ text, done });
+        await task.update(newData);
     }
 
     async delete (id) {

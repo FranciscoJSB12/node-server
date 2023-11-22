@@ -15,7 +15,12 @@ const TaskSchema = {
     },
     done: {
         allowNull: false,
-        type: DataTypes.BOOLEAN
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
+    },
+    frecuent: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
     }
 }
 
